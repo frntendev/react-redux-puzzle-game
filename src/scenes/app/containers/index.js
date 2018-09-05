@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import { css } from "react-emotion";
-import Home from "../../home/containers";
+import Home from "../../home/containers/homePageContainer";
 import Header from "../components/Header";
 import NoMatch from "../components/NoMatch";
 

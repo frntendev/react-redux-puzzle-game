@@ -48,35 +48,46 @@ const styles = {
   `
 };
 
-const Statics = props => {
-  return (
-    <div className={styles.staticContainer}>
-      <div className={styles.staticItem}>
-        <span>Timer</span>
-        <span className={styles.staticValue}>{props.timer}</span>
+class Statics extends React.Component {
+  handleNewGameClick = () => {
+    this.props.startTimer();
+    this.props.buildNewGame();
+  };
+
+  render() {
+    const props = this.props;
+    return (
+      <div className={styles.staticContainer}>
+        <div className={styles.staticItem}>
+          <span>Timer</span>
+          <span className={styles.staticValue}>{props.timer}</span>
+        </div>
+        <div className={styles.staticItem}>
+          <span>Clicked</span>
+          <span className={styles.staticValue}>{props.clicks}</span>
+        </div>
+        <div className={styles.staticItem}>
+          <span>Lives</span>
+          <span className={styles.staticValue}>{props.lives}</span>
+        </div>
+        <div className={styles.staticItem}>
+          <span>Level</span>
+          <span className={styles.staticValue}>{props.level}</span>
+        </div>
+        {(props.status === "win" ||
+          props.status === "init" ||
+          props.status === "over") && (
+          <button
+            onClick={this.handleNewGameClick}
+            className={styles.newGameBtn}
+          >
+            {props.status === "win" || props.level > 1 ? "Start" : "New Game"}
+          </button>
+        )}
       </div>
-      <div className={styles.staticItem}>
-        <span>Clicked</span>
-        <span className={styles.staticValue}>{props.clicks}</span>
-      </div>
-      <div className={styles.staticItem}>
-        <span>Lives</span>
-        <span className={styles.staticValue}>{props.lives}</span>
-      </div>
-      <div className={styles.staticItem}>
-        <span>Level</span>
-        <span className={styles.staticValue}>{props.level}</span>
-      </div>
-      {(props.status === "win" ||
-        props.status === "init" ||
-        props.status === "over") && (
-        <button onClick={props.onNewGameClick} className={styles.newGameBtn}>
-          {props.status === "win" || props.level > 1 ? "Start" : "New Game"}
-        </button>
-      )}
-    </div>
-  );
-};
+    );
+  }
+}
 
 export default Statics;
 
@@ -90,5 +101,6 @@ Statics.propTypes = {
   timer: PropTypes.number.isRequired,
   level: PropTypes.number.isRequired,
   status: PropTypes.oneOf(["init", "new", "keep", "win", "over"]).isRequired,
-  onNewGameClick: PropTypes.func
+  startTimer: PropTypes.func,
+  buildNewGame: PropTypes.func
 };

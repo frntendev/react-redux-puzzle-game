@@ -7,9 +7,9 @@ const styles = props => ({
     position: absolute;
     width: 100%;
     height: 100%;
-    background: ${props.status === "win"
+    background: ${props.levelStatus === "win"
       ? "#768f65ba"
-      : props.status === "over"
+      : props.levelStatus === "over"
         ? "#8f6565ba"
         : "#8f7965ba"};
     display: grid;
@@ -59,40 +59,57 @@ const renderOptions = number => {
   }
   return opt;
 };
-const DisplayLevelStatus = props => {
-  const style = styles(props);
-  return (
-    props.status !== "keep" &&
-    props.status !== "new" && (
-      <div className={style.container}>
-        <span className={style.text}>
-          {props.status === "over" && <div>You Lost</div>}
-          {props.status === "win" && <div>Congratulations! You Won!</div>}
-          You can Click on
-          {props.status === "win" || props.level > 1 ? " Start " : " New Game "}
-        </span>
-        {props.level > 1 && [
-          <span key="or">OR</span>,
-          <span key="level-select">
-            <select onChange={props.onLevelChange} className={style.select}>
-              <option>Choose Level</option>
-              {renderOptions(props.level)}
-            </select>
+class DisplayLevelStatus extends React.Component {
+  handleLevelSelectChange = event => {
+    this.props.startTimer();
+    this.props.buildNewGame(event.target.value);
+  };
+
+  render() {
+    const props = this.props;
+    const style = styles(props);
+    return (
+      props.levelStatus !== "keep" &&
+      props.levelStatus !== "new" && (
+        <div className={style.container}>
+          <span className={style.text}>
+            {props.levelStatus === "over" && <div>You Lost</div>}
+            {props.levelStatus === "win" && (
+              <div>Congratulations! You Won!</div>
+            )}
+            You can Click on
+            {props.levelStatus === "win" || props.levelNumber > 1
+              ? " Start "
+              : " New Game "}
           </span>
-        ]}
-      </div>
-    )
-  );
-};
+          {props.levelNumber > 1 && [
+            <span key="or">OR</span>,
+            <span key="level-select">
+              <select
+                onChange={this.handleLevelSelectChange}
+                className={style.select}
+              >
+                <option>Choose Level</option>
+                {renderOptions(props.levelNumber)}
+              </select>
+            </span>
+          ]}
+        </div>
+      )
+    );
+  }
+}
 
 export default DisplayLevelStatus;
 
 DisplayLevelStatus.defaultProps = {
-  status: "init"
+  levelStatus: "init"
 };
 
 DisplayLevelStatus.protoTypes = {
-  status: PropTypes.oneOf(["init", "new", "keep", "win", "over"]).isRequired,
-  level: PropTypes.number,
-  onLevelChange: PropTypes.func
+  levelStatus: PropTypes.oneOf(["init", "new", "keep", "win", "over"])
+    .isRequired,
+  levelNumber: PropTypes.number,
+  startTimer: PropTypes.func,
+  buildNewGame: PropTypes.func
 };

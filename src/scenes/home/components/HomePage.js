@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { css } from "react-emotion";
 import PuzzleCard from "./PuzzleCard";
-import Statics from "./Statics";
-import DisplayLevelStatus from "./DisplayLevelStatus";
+import Statics from "../containers/levelStaticsContainer";
+import DisplayLevelStatus from "../containers/levelStatusContainer";
 
 const styles = {
   root: css`
@@ -50,11 +50,6 @@ class HomePage extends React.Component {
     if (cachedLives) this.props.changeUserLives(parseInt(cachedLives, 10));
   }
 
-  handleNewGameClick = () => {
-    this.props.startTimer();
-    this.props.buildNewGame();
-  };
-
   handlePuzzleClick = id => {
     this.props.updateBoard(
       id,
@@ -63,31 +58,15 @@ class HomePage extends React.Component {
     );
   };
 
-  handleLevelSelectChange = event => {
-    this.props.startTimer();
-    this.props.buildNewGame(event.target.value);
-  };
-
   render() {
     const props = this.props;
-    const { items, levelInfo } = props;
+    const { items } = props;
     const numberOfSelected = items.filter(s => s === "selected").length;
     return (
       <div className={styles.root}>
-        <Statics
-          onNewGameClick={this.handleNewGameClick}
-          status={levelInfo.levelStatus}
-          clicks={props.clickedLeft}
-          lives={levelInfo.lives}
-          timer={levelInfo.timer}
-          level={levelInfo.levelNumber}
-        />
+        <Statics />
         <div className={styles.puzzlesContainer}>
-          <DisplayLevelStatus
-            level={levelInfo.levelNumber}
-            status={levelInfo.levelStatus}
-            onLevelChange={this.handleLevelSelectChange}
-          />
+          <DisplayLevelStatus />
           {items.map((item, index) => {
             return (
               <PuzzleCard
@@ -108,7 +87,5 @@ export default HomePage;
 
 HomePage.propTypes = {
   items: PropTypes.array,
-  levelInfo: PropTypes.object,
-  clickedLeft: PropTypes.number,
-  selectedCells: PropTypes.array
+  levelInfo: PropTypes.object
 };
